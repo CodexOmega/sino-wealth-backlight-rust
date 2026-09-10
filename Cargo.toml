@@ -4,7 +4,7 @@ version = "1.0.0"
 edition = "2021"
 description = "Toggle Sino Wealth / CM Storm keyboard backlight with Scroll Lock key on Linux/Wayland"
 license = "MIT"
-repository = "https://github.com/CodexOmega/sino-wealth-backlight"
+repository = "https://github.com/CodexOmega/sino-wealth-backlight-rust"
 
 [dependencies]
 nix = { version = "0.28", features = ["fs", "poll"] }

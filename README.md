@@ -34,7 +34,7 @@ device renumbering between boots and handles keyboard replugs.
 ### From source (recommended)
 
 ```sh
-git clone https://github.com/CodexOmega/sino-wealth-backlight.git
+git clone https://github.com/CodexOmega/sino-wealth-backlight-rust.git
 cd sino-wealth-backlight
 cargo build --release
 sudo install -m 755 target/release/sino-wealth-backlight /usr/local/bin/sino-wealth-backlight
@@ -45,7 +45,7 @@ sudo systemctl enable --now sino-wealth-backlight
 
 ### Pre-built binary
 
-Download the latest release from the [releases page](https://github.com/CodexOmega/sino-wealth-backlight/releases),
+Download the latest release from the [releases page](https://github.com/CodexOmega/sino-wealth-backlight-rust/releases),
 then:
 
 ```sh
