@@ -19,7 +19,7 @@ const KEY_SCROLLLOCK: u16 = 70;
 const KEY_PRESS: i32 = 1;
 
 const INPUT_EVENT_SIZE: usize = 24;
-const POLL_INTERVAL: Duration = Duration::from_millis(5);
+const POLL_INTERVAL: Duration = Duration::from_millis(1);
 const REASSERT_LOG_INTERVAL: Duration = Duration::from_secs(30);
 
 #[repr(C)]
@@ -59,12 +59,23 @@ fn find_led_brightness() -> Result<PathBuf, BacklightError> {
     for entry in glob("/sys/class/leds/*::scrolllock")? {
         let led_path = entry?;
         let device_path = led_path.join("device");
-        if let Ok(real_device) = fs::read_link(&device_path) {
-            let name_path = real_device.join("name");
-            if let Ok(name) = fs::read_to_string(&name_path) {
-                if name.trim() == TARGET_NAME {
-                    return Ok(led_path.join("brightness"));
-                }
+        let real_device = match fs::read_link(&device_path) {
+            Ok(p) => p,
+            Err(_) => continue,
+        };
+        let device_dir = device_path.parent().unwrap();
+        let name_path = if real_device.is_absolute() {
+            real_device.join("name")
+        } else {
+            device_dir.join(&real_device).join("name")
+        };
+        let name_path = match name_path.canonicalize() {
+            Ok(p) => p,
+            Err(_) => continue,
+        };
+        if let Ok(name) = fs::read_to_string(&name_path) {
+            if name.trim() == TARGET_NAME {
+                return Ok(led_path.join("brightness"));
             }
         }
     }
