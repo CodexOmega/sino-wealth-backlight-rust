@@ -16,7 +16,7 @@ The daemon runs as a **root systemd service** and:
 
 1. Watches the keyboard's evdev device for `Scroll Lock` key presses (`/dev/input/by-id/usb-SINO_WEALTH_USB_KEYBOARD-event-kbd`).
 2. Toggles the desired backlight state on each press.
-3. Polls `/sys/class/leds/*::scrolllock/brightness` every 5&nbsp;ms and re-asserts the desired state,
+3. Polls `/sys/class/leds/*::scrolllock/brightness` every 1&nbsp;ms and re-asserts the desired state,
    so the compositor's LED resets (which happen on every keystroke) are corrected too fast to be visible.
 4. Starts with the backlight **ON** and sets the LED trigger to `none` so the kernel driver can't fight it.
 
