@@ -1,0 +1,17 @@
+[package]
+name = "sino-wealth-backlight"
+version = "1.0.0"
+edition = "2021"
+description = "Toggle Sino Wealth / CM Storm keyboard backlight with Scroll Lock key on Linux/Wayland"
+license = "MIT"
+repository = "https://github.com/CodexOmega/sino-wealth-backlight"
+
+[dependencies]
+nix = { version = "0.28", features = ["fs", "poll"] }
+glob = "0.3"
+libc = "0.2"
+thiserror = "1.0"
+
+[[bin]]
+name = "sino-wealth-backlight"
+path = "src/main.rs"

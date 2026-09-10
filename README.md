@@ -26,21 +26,30 @@ device renumbering between boots and handles keyboard replugs.
 ## Requirements
 
 - Linux (systemd)
-- Python 3 (stdlib only, no pip dependencies)
+- Rust 1.70+ (for building from source)
 - A keyboard that reports its backlight via the Scroll Lock LED
 
 ## Install
 
+### From source (recommended)
+
 ```sh
 git clone https://github.com/CodexOmega/sino-wealth-backlight.git
-```
-
-```sh
 cd sino-wealth-backlight
+cargo build --release
+sudo install -m 755 target/release/sino-wealth-backlight /usr/local/bin/sino-wealth-backlight
+sudo install -m 644 sino-wealth-backlight.service /etc/systemd/system/sino-wealth-backlight.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now sino-wealth-backlight
 ```
 
+### Pre-built binary
+
+Download the latest release from the [releases page](https://github.com/CodexOmega/sino-wealth-backlight/releases),
+then:
+
 ```sh
-sudo install -m 755 sino-wealth-backlight.py /usr/local/bin/sino-wealth-backlight.py
+sudo install -m 755 sino-wealth-backlight /usr/local/bin/sino-wealth-backlight
 sudo install -m 644 sino-wealth-backlight.service /etc/systemd/system/sino-wealth-backlight.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now sino-wealth-backlight
@@ -63,7 +72,7 @@ Stop it anytime with `sudo systemctl stop sino-wealth-backlight` (the backlight 
 ## Configuration
 
 The script targets this specific keyboard by default. If your keyboard differs, edit the constants
-at the top of `sino-wealth-backlight.py`:
+at the top of `src/main.rs` and rebuild:
 
 | Constant | Purpose |
 |---|---|
@@ -83,7 +92,7 @@ cat /sys/class/leds/*::scrolllock/brightness   # echo 1 to test the backlight
   (`ls /sys/class/leds/ | grep scrolllock`) and that `echo 1 | sudo tee /sys/class/leds/*::scrolllock/brightness`
   turns it on.
 - **Flicker while typing**: the compositor resets the LED on every keystroke. The 5&nbsp;ms poll
-  should make this invisible; if you still see it, lower `POLL_INTERVAL`.
+  should make this invisible; if you still see it, lower `POLL_INTERVAL` in `src/main.rs` and rebuild.
 - **Wrong device targeted**: check `journalctl -u sino-wealth-backlight -f` to see which device it
   attached to, and adjust `TARGET_NAME`.
 
